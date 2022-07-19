@@ -1,7 +1,7 @@
 
 from django.http import HttpResponseRedirect,HttpResponse
 from django.shortcuts import redirect, render,get_object_or_404
-from .models import Post, Profile
+from .models import Post, Profile,Category
 from django.db.models import Q
 from django.urls import reverse
 from django.contrib import messages
@@ -14,12 +14,14 @@ from django.conf import settings
 
 def index(request):
     posts = Post.objects.all()
+
+    categories = Category.objects.all()
     q = request.GET.get('q')
     if q:
-        post = posts.filter(Q(title__contains=q))
+        posts = posts.filter(Q(title__contains=q))
     context = {
         "posts":posts,
-        
+        "categories":categories
         
     }
     return render(request,'index.html',context)
@@ -55,6 +57,11 @@ def create_profile(request):
 def login_page(request):
     return render(request,'login.html')
 
+def logout_user(request):
+    logout(request)
+    return HttpResponseRedirect(reverse("index"))
+
+
 
 def login(request):
     if request.method != "POST":
@@ -67,7 +74,7 @@ def login(request):
         )
         if user != None:
             auth_login(request,user)
-            return HttpResponseRedirect(reverse("/"))
+            return HttpResponseRedirect(reverse("index"))
         else:
             messages.error(request,"Xato Kirish")
             return HttpResponseRedirect("sign_up")
@@ -122,3 +129,13 @@ def post_share(request,post_id):
     else:
         form = EmailPostForm()
     return render(request, 'blog/post/share.html',{'post':post,'form':form,'sent':sent})
+
+def category_detail(request,id):
+    category = get_object_or_404(Category,id=id)
+    posts = Post.objects.filter(categroy=category)
+    categories = Category.objects.all()
+    context = {
+        "posts":posts,
+        "categories":categories
+    }
+    return render(request,'index.html',context)
