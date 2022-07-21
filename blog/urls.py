@@ -1,5 +1,18 @@
 from django.urls import path
-from .views import index,register_page,create_profile,login_page,post_detail,post_share,login,logout_user,category_detail
+from .views import (
+    index,
+    register_page,
+    create_profile,
+    login_page,
+    post_detail,
+    post_share,
+    login,
+    logout_user,
+    category_detail,
+    my_posts,
+    create_page,
+    create_post_save
+)
 
 urlpatterns = [
     path('',index,name='index'),
@@ -11,6 +24,7 @@ urlpatterns = [
     path('<int:year>/<int:month>/<int:day>/<slug:post>/',post_detail,name="post_detail"),
     path('<int:post_id>/share/',post_share,name='post_share'),
     path('category/<int:id>/',category_detail,name='category_detail'),
-
-
+    path('my_posts/',my_posts,name='my_posts'),
+    path('create_page/',create_page,name='create_page'),
+    path('create_post_save',create_post_save,name='create_post_save'),
 ]

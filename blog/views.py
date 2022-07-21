@@ -139,3 +139,45 @@ def category_detail(request,id):
         "categories":categories
     }
     return render(request,'index.html',context)
+
+
+def my_posts(request):
+    posts = Post.objects.filter(author=request.user)
+    context = {
+        "posts":posts
+    }
+    return render(request, 'my_posts.html',context)
+
+
+def create_page(request):
+    categories = Category.objects.all()
+
+    return render(request, 'create_post.html',{"categories":categories})
+
+def create_post_save(request):
+    if request.method != "POST":
+        return HttpResponse("Xato sorov")
+    else:
+        title = request.POST.get("title")
+        slug = request.POST.get("slug")
+        category_id = request.POST.get("category")
+        category = get_object_or_404(Category, id=category_id)
+        body = request.POST.get("body")
+        status = request.POST.get("status")
+        image = request.FILES['image']
+        tags = request.POST.get("tags")
+        try:
+            post = Post.objects.create(
+                categroy = category,
+                title = title,
+                slug = slug,
+                author= request.user,
+                body = body,
+                status = status,
+                image = image,
+                tags = tags,
+            )
+            post.save()
+            return HttpResponseRedirect('my_posts')
+        except:
+            return HttpResponseRedirect('create_page')
