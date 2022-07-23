@@ -83,17 +83,17 @@
         <td>{{ post.created|date:'d-m-Y h:m' }}</td>
         <td>{{ post.status }}</td>
         <td>
-            <a href="#" class="edit" title="Edit" data-toggle="tooltip"
+            <a href="{% url 'post_edit' post.id %}" class="edit" title="Edit" data-toggle="tooltip"
                     ><i class="material-icons">&#xE254;</i></a
                   >
-                  <a
-                    href="#"
-                    class="delete"
-                    title="Delete"
-                    onclick=" return confirm('O`chirib Tashlamoqchimisiz ?')"
-                    data-toggle="tooltip"
-                    ><i class="material-icons">&#xE872;</i></a
-                  >
+            <a
+              href="{% url 'post_delet' post.id %}"
+              class="delete"
+              title="Delete"
+              onclick=" return confirm('O`chirib Tashlamoqchimisiz ?')"
+              data-toggle="tooltip"
+              ><i class="material-icons">&#xE872;</i></a
+            >
         </td>
         </tr>
     {% endfor %}

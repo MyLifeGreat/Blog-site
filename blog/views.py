@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate, login as auth_login,logout
 from .forms import EmailPostForm,CommentForm
 from django.core.mail import send_mail
 from django.conf import settings
+from .models import Post
 
 
 
@@ -181,3 +182,44 @@ def create_post_save(request):
             return HttpResponseRedirect('my_posts')
         except:
             return HttpResponseRedirect('create_page')
+
+
+def post_delet(request,id):
+    posts = get_object_or_404(Post,id=id)
+    posts.delete()
+    return HttpResponseRedirect("/my_posts")
+
+def post_edit(request, id):
+    posts = get_object_or_404(Post, id=id)
+    categories = Category.objects.all()
+    context = {
+        'posts':posts,
+        "categories":categories
+    }
+    return render(request, 'edit.html',context)
+
+
+def edit_post_save(request):
+    if request.method != "POST":
+        return HttpResponse("Xato sorov")
+    else:
+        post_id = request.POST.get("id")
+        title = request.POST.get("title")
+        slug = request.POST.get("slug")
+        category_id = request.POST.get("category")
+        category = get_object_or_404(Category,id=category_id)
+        body = request.POST.get("body")
+        status = request.POST.get("status")
+        tags = request.POST.get("tags")
+        try:
+            post = get_object_or_404(Post, id=post_id)
+            post.title = title
+            post.slug = slug
+            post.categroy = category
+            post.body = body
+            post.status = status
+            post.tags = tags
+            post.save()
+            return HttpResponseRedirect('my_posts')
+        except:
+            return HttpResponseRedirect('post_edit',kwargs={"id":post_id})

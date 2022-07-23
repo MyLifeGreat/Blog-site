@@ -11,7 +11,11 @@ from .views import (
     category_detail,
     my_posts,
     create_page,
-    create_post_save
+    create_post_save,
+    post_delet,
+    post_edit,
+    edit_post_save,
+
 )
 
 urlpatterns = [
@@ -27,4 +31,8 @@ urlpatterns = [
     path('my_posts/',my_posts,name='my_posts'),
     path('create_page/',create_page,name='create_page'),
     path('create_post_save',create_post_save,name='create_post_save'),
+    path('my_posts/<int:id>',post_delet, name="post_delet"),
+    path('post_edit/<int:id>',post_edit, name="post_edit"),
+    path('edit_post_save',edit_post_save, name="edit_post_save"),
+
 ]
